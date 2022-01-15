@@ -46,7 +46,15 @@ app.post('/todos', (req, res) => {
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
-
+// 接住 detail前面產生的動態連結
+app.get('/todos/:id', ( req, res ) => {
+  // this._id被 params抓下來存進變數 id裡面
+  const id = req.params.id
+  return Todo.findById(id)
+    .lean()
+    .then((todo) => res.render('detail', { todo: todo }))
+    .catch(error => console.log(error))
+})
 
 app.listen(port, () => {
   console.log(`App is running on http://localhost:${port}`)
