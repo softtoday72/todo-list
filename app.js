@@ -3,6 +3,8 @@ const app = express()
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const port = 3000
+//import todo.js裡面的 module.exports = mongoose.model('Todo', todoSchema)
+const Todo = require('./models/todo')
 
 //app.engine 這一行我們只是在應用程式裡新增了一個叫 hbs 的樣板引擎，但要到 app.set 這一行，這個 hbs 元件才正式掛載到我們的主程式裡，開始啟用。和之前的課程相比，在呼叫 exphbs 的時候，除了設定預設樣板，還多了一組設定 extname: '.hbs'，是指定副檔名為.hbs，有了這行以後，我們才能把預設的長檔名改寫成短檔名
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs'}))
@@ -25,7 +27,10 @@ db.once('open', () => {
 })
 
 app.get('/', (req, res) => {
-  res.render('index')
+  Todo.find() //取出 Todo model 裡的所有資料
+    .lean()   //把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
+    .then(todos => res.render('index', {todos: todos}))
+    .catch(error => console.log(error))
 })
 
 app.listen(port, () => {
