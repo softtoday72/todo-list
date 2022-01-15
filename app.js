@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 app.get('/todos/new', (req,res) => {
   return res.render('new')
 })
-
+//新增一筆
 // todos 這條路由會利用 Todo 這個 model 在資料庫創建資料 , 然後重導回首頁
 app.post('/todos', (req, res) => {
   const name = req.body.name
@@ -46,7 +46,8 @@ app.post('/todos', (req, res) => {
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
-// 接住 detail前面產生的動態連結
+//瀏覽特定
+// 接住 detail前面產生的動態連結 前往 detail.hbs
 app.get('/todos/:id', ( req, res ) => {
   // this._id被 params抓下來存進變數 id裡面
   const id = req.params.id
@@ -55,6 +56,30 @@ app.get('/todos/:id', ( req, res ) => {
     .then((todo) => res.render('detail', { todo: todo }))
     .catch(error => console.log(error))
 })
+
+//修改特定
+//進入修改頁面
+app.get('/todos/:id/edit', (req,res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .lean()
+    .then((todo) => res.render('edit', {todo: todo}))
+    .catch(error => console.log(error))
+})
+//送出修改資料
+app.post('/todos/:id/edit', (req, res) => {
+  const id = req.params.id  //來自GET 所以用 params
+  const name = req.body.name //來自 POST 所以用 body
+  return Todo.findById(id)
+    .then(todo => {
+      todo.name = name //右邊的name是表單中填寫的name 左邊是資料庫中原本的值
+      return todo.save() //存起來!
+    })
+    .then(() => res.redirect(`/todos/${id}`)) //返回瀏覽特定頁 , 瀏覽特定頁在自己去跟資料庫請資料, 重構新畫面
+    .catch(error => console.log(error))
+})
+
+
 
 app.listen(port, () => {
   console.log(`App is running on http://localhost:${port}`)
