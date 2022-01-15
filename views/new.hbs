@@ -1,0 +1,12 @@
+{{!-- todo-list database 裡面有個 todos 的命名來自於這裡：
+mongoose.model('Todo', todoSchema)
+                ^^^^^^
+mongoose 的文件中有提到會自動轉換成小寫複數型態，
+遇到不認識的字的話，會直接加上 s ： --}}
+
+{{!-- 這邊 action 的todos 是自行命名 , 所以之後 app.js (controller) 裡面要補一個 app.post('/todos')--}}
+<form action="/todos" method="POST">
+  <input type="text" placeholder="name" name="name">
+  <button type="submit">Create</button>
+</form>
+
