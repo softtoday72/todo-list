@@ -1,5 +1,8 @@
 <p>{{ todo.name }}</p>
 {{!-- detail.hbs 會在 /todo/:id 呈現出來，所以 ./ 就等同於 /todo/ --}}
 {{!-- <a href="./todos/{{ todo._id }}/edit">Edit</a> 會出現Cannot GET /todos/todos/61d6fd99136f1559001a7deb/edit --}}
-<a href="/todos/{{ this._id }}/edit">edit</a>
+<a href="/todos/{{ todo._id }}/edit">edit</a>
 <a href="/">Back</a>
+<form action="/todos/{{todo._id}}/delete" method="POST" style="display: inline;">
+  <button type="submit">delete</button>
+</form>
