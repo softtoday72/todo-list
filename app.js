@@ -4,7 +4,7 @@ const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const port = 3000
 const bodyParser = require('body-parser')
-
+const methodOverride = require('method-override')
 //import todo.js裡面的 module.exports = mongoose.model('Todo', todoSchema)
 const Todo = require('./models/todo')
 
@@ -12,6 +12,7 @@ const Todo = require('./models/todo')
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs'}))
 app.set('view engine', 'hbs')
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(methodOverride('_method'))
 //這邊的todo-list是mongoose資料庫名稱
 mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -68,7 +69,7 @@ app.get('/todos/:id/edit', (req,res) => {
     .catch(error => console.log(error))
 })
 //送出修改資料
-app.post('/todos/:id/edit', (req, res) => {
+app.put('/todos/:id', (req, res) => {
   const id = req.params.id  //來自GET 所以用 params
   //這寫法叫 解構賦值 (destructuring assignment)
   const { name, isDone } = req.body //來自 POST 所以用 body
@@ -82,7 +83,7 @@ app.post('/todos/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
     .then(todo => todo.remove())
