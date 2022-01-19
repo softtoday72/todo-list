@@ -69,10 +69,12 @@ app.get('/todos/:id/edit', (req,res) => {
 //送出修改資料
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id  //來自GET 所以用 params
-  const name = req.body.name //來自 POST 所以用 body
+  //這寫法叫 解構賦值 (destructuring assignment)
+  const { name, isDone } = req.body //來自 POST 所以用 body
   return Todo.findById(id)
     .then(todo => {
       todo.name = name //右邊的name是表單中填寫的name 左邊是資料庫中原本的值
+      todo.isDone = isDone === 'on' //isDone === 'on'的回傳值為布林值
       return todo.save() //存起來!
     })
     .then(() => res.redirect(`/todos/${id}`)) //返回瀏覽特定頁 , 瀏覽特定頁在自己去跟資料庫請資料, 重構新畫面

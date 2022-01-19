@@ -2,6 +2,7 @@
 <ul>
   {{#each todos}}
     <li>
+      <input type="checkbox" name="isDone" {{#if this.isDone }} checked {{/if}} disabled>
       {{this.name}}
       {{!-- _id 這個是資料庫自行產生的一組數字 --}}
       {{!-- 動態產生一個新的連結 --}}

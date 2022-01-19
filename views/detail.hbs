@@ -1,4 +1,9 @@
-<p>{{ todo.name }}</p>
+
+<p>
+  {{!-- todo.isDone是on, if判斷式就會是true, todo.isDone是空值就會是 false --}}
+  <input type="checkbox" name="isDone" {{#if todo.isDone }} checked {{/if}} disabled> 
+  {{ todo.name }}
+</p>
 {{!-- detail.hbs 會在 /todo/:id 呈現出來，所以 ./ 就等同於 /todo/ --}}
 {{!-- <a href="./todos/{{ todo._id }}/edit">Edit</a> 會出現Cannot GET /todos/todos/61d6fd99136f1559001a7deb/edit --}}
 <a href="/todos/{{ todo._id }}/edit">edit</a>
