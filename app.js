@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const exphbs = require('express-handlebars')
 
-const port = 3000
+const port = process.env.PORT || 3000
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 //本來路徑應該要打 ./routes/index  但是在import路由器的時候就會自動找叫 index的檔案 , 所以打到資料夾就好 

@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
 
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/todo-list'
+
 //這邊的todo-list是mongoose資料庫名稱
-mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGODB_URI , { useNewUrlParser: true, useUnifiedTopology: true })
 
 //把connection內容抓下來
 const db = mongoose.connection
