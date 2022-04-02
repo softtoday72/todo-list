@@ -1,12 +1,18 @@
 const express = require('express')
+const session = require('express-session')
 const app = express()
 const exphbs = require('express-handlebars')
+//這行要在 express-session後面
+const usePassport = require('./config/passport')
 
 const port = process.env.PORT || 3000
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 //本來路徑應該要打 ./routes/index  但是在import路由器的時候就會自動找叫 index的檔案 , 所以打到資料夾就好 
 const routes = require('./routes')
+
+//這行要在路由前面 app.use(routes)
+usePassport(app)
 
 //對 app.js 而言，Mongoose 連線設定只需要「被執行」，不需要接到任何回傳參數繼續利用，所以這裡不需要再設定變數去接
 require('./config/mongoose')
