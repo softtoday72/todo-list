@@ -11,6 +11,12 @@ const todoSchema = new Schema({
     type:Boolean,
     default: false,
   },
+  userId: {  // 加入關聯設定
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    index: true,
+    required: true
+  }
 })
 //透過 module.exports 把這個 schema 輸出 ,匯出的時候我們把這份 schema 命名為 Todo
 module.exports = mongoose.model('Todo', todoSchema)

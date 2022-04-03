@@ -12,8 +12,9 @@ router.get('/new', (req, res) => {
 // todos 這條路由會利用 Todo 這個 model 在資料庫創建資料 , 然後重導回首頁
 //下面這行本來是 "/todos" 去掉後變成 "/"
 router.post('/', (req, res) => {
+  const userId = req.user._id
   const name = req.body.name
-  return Todo.create({ name })
+  return Todo.create({ name , userId })
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
@@ -21,8 +22,9 @@ router.post('/', (req, res) => {
 // 接住 detail前面產生的動態連結 前往 detail.hbs
 router.get('/:id', (req, res) => {
   // this._id被 params抓下來存進變數 id裡面
-  const id = req.params.id
-  return Todo.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Todo.findOne({ _id, userId })
     .lean()
     .then((todo) => res.render('detail', { todo: todo }))
     .catch(error => console.log(error))
@@ -31,30 +33,33 @@ router.get('/:id', (req, res) => {
 //修改特定
 //進入修改頁面
 router.get('/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Todo.findOne({ _id, userId })
     .lean()
     .then((todo) => res.render('edit', { todo: todo }))
     .catch(error => console.log(error))
 })
 //送出修改資料
 router.put('/:id', (req, res) => {
-  const id = req.params.id  //來自GET 所以用 params
+  const userId = req.user._id
+  const _id = req.params.id  //來自GET 所以用 params
   //這寫法叫 解構賦值 (destructuring assignment)
   const { name, isDone } = req.body //來自 POST 所以用 body
-  return Todo.findById(id)
+  return Todo.findOne({ _id, userId })
     .then(todo => {
       todo.name = name //右邊的name是表單中填寫的name 左邊是資料庫中原本的值
       todo.isDone = isDone === 'on' //isDone === 'on'的回傳值為布林值
       return todo.save() //存起來!
     })
-    .then(() => res.redirect(`/todos/${id}`)) //返回瀏覽特定頁 , 瀏覽特定頁在自己去跟資料庫請資料, 重構新畫面
+    .then(() => res.redirect(`/todos/${_id}`)) //返回瀏覽特定頁 , 瀏覽特定頁在自己去跟資料庫請資料, 重構新畫面
     .catch(error => console.log(error))
 })
 
 router.delete('/:id', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Todo.findOne({ _id, userId })
     .then(todo => todo.remove())
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
